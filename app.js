@@ -133,13 +133,13 @@ app.post('/weight/add',
   isLoggedIn,
   async (req,res,next) => {
     try{
-      const {date,time,tame,unit,currWeight, caloriesTook,comments} = req.body; // get title and description from the body
+      const {date,time,name,unit,currWeight, caloriesTook,comments} = req.body; // get title and description from the body
       const userId = res.locals.user._id; // get the user's id
       const createdAt = new Date(); // get the current date/time
-      let data = {date,time,tame,unit,currWeight, caloriesTook,comments, userId, createdAt,} // create the data object
+      let data = {date,time,name,unit,currWeight, caloriesTook,comments, userId, createdAt,} // create the data object
       let item = new Weight(data) // create the database object (and test the types are correct)
       await item.save() // save the todo item in the database
-      res.redirect('/')  // go back to the todo page
+      res.redirect('/weight')  // go back to the todo page
     } catch (e){
       next(e);
     }
@@ -439,6 +439,7 @@ app.set("port", port);
 
 // and now we startup the server listening on that port
 const http = require("http");
+const { resolve4 } = require("dns");
 const server = http.createServer(app);
 
 server.listen(port);

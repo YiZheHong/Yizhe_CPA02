@@ -1,7 +1,8 @@
-# CS103a Express App Demo
+## Yizhe CPA02 Express App 
 
-This is a starter project which has a simple authentication module 
-and provides access to a mongoose database in the cloud.
+This is a simp[le] project which can help user to track their weight
+and provides access to a mongoose database in the cloud. It is also deployed on heroku
+
 
 ## Installation
 Download the project from github and download nodejs and npm from https://nodejs.org
@@ -23,9 +24,13 @@ and start the project with
 ``` bash
 nodemon
 ```
+Or 
+``` bash
+npm start
+```
 
 ## App Demonstration 
-Here is a link to a moive showing how you can use our app: https://brandeis.zoom.us/rec/share/wliTxhF0wqb0cEPVlRDyy9Ezxhlb65GotEDAT9dRefoIZ2H5cS7jB3SHqSvE5DJc.ykwU27jWz_aO4rhM?startTime=1650622719000
+Here is a link to a moive showing how you can use our app: 
 
 
 

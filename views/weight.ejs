@@ -1,16 +1,12 @@
 
 
     <div class="jumbotron">
-        <h1>PA03: Course Finder Fall20-Spr21 </h1>
+        <h1>CPA02: Weight Tracker</h1>
         <p></p>
     </div>
 
     <p class="p-3 m-3 border border-primary bg-light">
-        The goal of this assignment is to write an app that will let
-        students pick their courses for the year. Since we don't have
-        the data for this year (due to workday issues), we will use the
-        2020-2021 Academic year data. You must signup or login to see
-        the courses and create your schedule.
+        The goal of this App is to help use to record the weight change of themselves!
     </p>
 
     <% if (true || loggedIn) {%>
@@ -68,10 +64,29 @@
                 <td>
                     <strong><%= item.date %></strong>
                 </td>
+                <td>
+                    <strong><%= time %></strong>
+                </td>
+                <td>
+                    <strong><%= item.name %></strong>
+                </td>
+                <td>
+                    <strong><%= weight %></strong>
+                </td>
+                <td>
+                    <strong><%= item.unit %></strong>
+                </td>
+                <td>
+                    <strong><%= cal %></strong>
+                </td>
+                <td>
+                    <strong><%= comment %></strong>
+                </td>
         
                 
             </tr>
             <% } %>
             </tbody>
         </table>
+        <a href="/plot">Plot the change of weight</a>
     <% } %>
