@@ -21,7 +21,7 @@ const axios = require("axios")
 const ToDoItem = require("./models/ToDoItem")
 const Course = require('./models/Course')
 const Schedule = require('./models/Schedule')
-
+const Weight = require('./models/Weight')
 // *********************************************************** //
 //  Loading JSON datasets
 // *********************************************************** //
@@ -34,7 +34,7 @@ const courses = require('./public/data/courses20-21.json')
 
 const mongoose = require( 'mongoose' );
 //const mongodb_URI = 'mongodb://localhost:27017/cs103a_todo'
-const mongodb_URI = 'mongodb+srv://cs_sj:BrandeisSpr22@cluster0.kgugl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const mongodb_URI = 'mongodb+srv://yizhehong:Aa838612357@weighttracker.6c5c4.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 //mongodb+srv://cs103a:<password>@cluster0.kgugl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 
 mongoose.connect( mongodb_URI, { useNewUrlParser: true, useUnifiedTopology: true } );
@@ -114,7 +114,37 @@ app.get("/about", (req, res, next) => {
   res.render("about");
 });
 
+app.get('/weight',
+  isLoggedIn,   // redirect to /login if user is not logged in
+  async (req,res,next) => {
+    try{
+      let userId = res.locals.user._id;  // get the user's id
+      let items = await Weight.find({userId:userId}); // lookup the user's todo items
+      res.locals.items = items;  //make the items available in the view
+      res.render("weight");
+    } catch (e){
+      next(e);
+    }
+  }
+  )
 
+
+app.post('/weight/add',
+  isLoggedIn,
+  async (req,res,next) => {
+    try{
+      const {date,time,tame,unit,currWeight, caloriesTook,comments} = req.body; // get title and description from the body
+      const userId = res.locals.user._id; // get the user's id
+      const createdAt = new Date(); // get the current date/time
+      let data = {date,time,tame,unit,currWeight, caloriesTook,comments, userId, createdAt,} // create the data object
+      let item = new Weight(data) // create the database object (and test the types are correct)
+      await item.save() // save the todo item in the database
+      res.redirect('/')  // go back to the todo page
+    } catch (e){
+      next(e);
+    }
+  }
+  )
 
 /*
     ToDoList routes
