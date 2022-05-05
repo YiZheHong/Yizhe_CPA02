@@ -18,14 +18,17 @@ const axios = require("axios")
 // *********************************************************** //
 //  Loading models
 // *********************************************************** //
-const ToDoItem = require("./models/ToDoItem")
 const Course = require('./models/Course')
 const Schedule = require('./models/Schedule')
 const Weight = require('./models/Weight')
+const Recipe = require('./models/Recipe')
+
 // *********************************************************** //
 //  Loading JSON datasets
 // *********************************************************** //
 const courses = require('./public/data/courses20-21.json')
+const recipes = require('./public/data/db-recipes.json')
+
 
 
 // *********************************************************** //
@@ -109,7 +112,54 @@ const isLoggedIn = (req,res,next) => {
 app.get("/", (req, res, next) => {
   res.render("index");
 });
+app.get("/recipeSearch", (req, res, next) => {
+  res.render("recipeSearch");
+});
 
+app.get('/recipeAdd/:id',
+  // add a course to the user's schedule
+  async (req,res,next) => {
+    try {
+      const recipeID = req.params.id;
+      let userId = res.locals.user._id;  // get the user's id
+      let i = recipes[recipeID];
+      let data = {name:i.name,calories:i.calories,fat:i.fat,fiber:i.fiber,sugar:i.sugar,protein:i.protein,instructions:i.instructions,userId:userId} // create the data object
+      let item = new Recipe(data) // create the database object (and test the types are correct)
+      await item.save() // save the todo item in the database
+      let rs = await Recipe.find({userId:userId}); // lookup the user's todo items
+      res.locals.items = rs;  //make the items available in the view
+      res.render('recipeSaved')
+    } catch(e){
+      next(e)
+    }
+  })
+app.post('/recipeFind',
+  async (req,res,next) => {
+    try{
+      let li = [];
+      const {curr,expect} = req.body; // get title and description from the body
+      for (const [key, value] of Object.entries(recipes)) {
+        if(curr > expect){
+          if(value.calories <= 1000){
+            li.push([key,value]);
+
+          }
+        }
+        else{
+          if(value.calories >= 1000){
+            li.push([key,value]);
+          }
+        }
+      } 
+      list = li.sort(() => Math.random() - 0.5)
+      res.locals.li = list
+
+      res.render('recipeShow')  // go back to the todo page
+    } catch (e){
+      next(e);
+    }
+  }
+  )
 app.get("/about", (req, res, next) => {
   res.render("about");
 });
@@ -145,67 +195,6 @@ app.post('/weight/add',
     }
   }
   )
-
-/*
-    ToDoList routes
-*/
-app.get('/todo',
-  isLoggedIn,   // redirect to /login if user is not logged in
-  async (req,res,next) => {
-    try{
-      let userId = res.locals.user._id;  // get the user's id
-      let items = await ToDoItem.find({userId:userId}); // lookup the user's todo items
-      res.locals.items = items;  //make the items available in the view
-      res.render("toDo");  // render to the toDo page
-    } catch (e){
-      next(e);
-    }
-  }
-  )
-
-  app.post('/todo/add',
-  isLoggedIn,
-  async (req,res,next) => {
-    try{
-      const {title,description} = req.body; // get title and description from the body
-      const userId = res.locals.user._id; // get the user's id
-      const createdAt = new Date(); // get the current date/time
-      let data = {title, description, userId, createdAt,} // create the data object
-      let item = new ToDoItem(data) // create the database object (and test the types are correct)
-      await item.save() // save the todo item in the database
-      res.redirect('/todo')  // go back to the todo page
-    } catch (e){
-      next(e);
-    }
-  }
-  )
-
-  app.get("/todo/delete/:itemId",
-    isLoggedIn,
-    async (req,res,next) => {
-      try{
-        const itemId=req.params.itemId; // get the id of the item to delete
-        await ToDoItem.deleteOne({_id:itemId}) // remove that item from the database
-        res.redirect('/todo') // go back to the todo page
-      } catch (e){
-        next(e);
-      }
-    }
-  )
-
-  app.get("/todo/completed/:value/:itemId",
-  isLoggedIn,
-  async (req,res,next) => {
-    try{
-      const itemId=req.params.itemId; // get the id of the item to delete
-      const completed = req.params.value=='true';
-      await ToDoItem.findByIdAndUpdate(itemId,{completed}) // remove that item from the database
-      res.redirect('/todo') // go back to the todo page
-    } catch (e){
-      next(e);
-    }
-  }
-)
 
 /* ************************
   Functions needed for the course finder routes
@@ -264,21 +253,6 @@ function time2str(time){
 // this route loads in the courses into the Course collection
 // or updates the courses if it is not a new collection
 
-app.get('/upsertDB',
-  async (req,res,next) => {
-    for (course of courses){
-      const {subject,coursenum,section,term,times}=course;
-      const num = getNum(coursenum);
-      course.num=num
-      course.suffix = coursenum.slice(num.length)
-    //  console.log("upsert passed")
-      course.strTimes = times2str(course.times)
-      await Course.findOneAndUpdate({subject,coursenum,section,term,times},course,{upsert:true})
-    }
-    const num = await Course.find({}).count();
-    res.send("data uploaded: "+num)
-  }
-)
 
 
 app.post('/courses/bySubject',
