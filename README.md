@@ -1,7 +1,13 @@
 ## Yizhe CPA02 Express App 
 
-This is a simp[le] project which can help user to track their weight
-and provides access to a mongoose database in the cloud. It is also deployed on heroku
+This is a simple project which can help user to track their weight 
+![Test Image 1](public\images\Pic3.png)
+and find healthy recipe
+![Test Image 2](public\images\Pic1.png)
+and store it on mongodb database
+![Test Image 3](public\images\Pic2.png)
+and provides access to a mongoose database in the cloud. 
+It is also deployed on heroku
 
 
 ## Installation
@@ -29,8 +35,9 @@ Or
 npm start
 ```
 
-## App Demonstration 
+## App Demonstration:
 Here is a link to a moive showing how you can use our app: 
-
+## Deployed on Heroku:
+https://nameless-sands-76590.herokuapp.com/
 
 
