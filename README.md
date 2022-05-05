@@ -1,11 +1,11 @@
 ## Yizhe CPA02 Express App 
 
 This is a simple project which can help user to track their weight 
-![Test Image 1](public\images\Pic3.png)
+![Test Image 1](./public/images/Pic3.png)
 and find healthy recipe
-![Test Image 2](public\images\Pic1.png)
+![Test Image 2](./public/images/Pic1.png)
 and store it on mongodb database
-![Test Image 3](public\images\Pic2.png)
+![Test Image 3](./public/images/Pic2.png)
 and provides access to a mongoose database in the cloud. 
 It is also deployed on heroku
 
